@@ -3,8 +3,9 @@ import { Container } from '@material-ui/core';
 
 import Navbar from './components/Navbar/Navbar';
 import Home from './components/Home/Home';
+import PostDetails from './components/PostDetails/PostDetails';
 import Auth from './components/Auth/Auth';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { gapi } from "gapi-script";
 
 const App = () => {
@@ -13,18 +14,22 @@ const App = () => {
         gapi.client.init({
           clientId:
             "566883177832-3jbs9oo53fu8j4jfidf0ca9qe2mi55mt.apps.googleusercontent.com",
-          // plugin_name: "chat",
           scope: 'https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile openid'
         });
       });
+
+      const user = JSON.parse(localStorage.getItem('profile'));
    
     return (
         <BrowserRouter>
-            <Container maxWidth="lg">
+            <Container maxWidth="xl">
                 <Navbar />
                 <Routes>
-                    <Route path='/' Component={Home}/>
-                    <Route path='/auth' Component={Auth}/>
+                    <Route path='/' Component={() =>  <Navigate to="/posts" />} />
+                    <Route path='/posts' exact Component={Home} />
+                    <Route path='/posts/search' exact Component={Home} />
+                    <Route path='/posts/:id' exact Component={PostDetails} />
+                    <Route path='/auth' Component={() => (!user ? <Auth /> : <Navigate  to={`/posts`}/>)} />
                 </Routes>
             </Container>
         </BrowserRouter>

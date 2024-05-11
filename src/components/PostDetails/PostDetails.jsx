@@ -1,9 +1,10 @@
 import React, { useEffect } from 'react';
-import { Paper, Typography, CircularProgress, Divider } from '@material-ui/core';
+import { Paper, Typography, CircularProgress, Divider, Card, CardMedia, ButtonBase, Button, CardContent} from '@material-ui/core';
 import {  useDispatch, useSelector } from 'react-redux';
 import moment from 'moment';
 import { useNavigate, useParams } from 'react-router-dom';
 import { getPost, getPostsBySearch } from '../../actions/posts';
+import CommentSection from './CommentSection';
 import useStyles from './styles';
 
 const PostDetails = () => {
@@ -34,9 +35,29 @@ const PostDetails = () => {
   }
 
   const recommendedPosts = posts.filter(({_id}) => post._id !== _id);
-  console.log(recommendedPosts);
 
   const openPost = (_id) => navigate(`/posts/${_id}`)
+
+  const Post = (post) => {
+    return (
+      <Card className={classes.card} raised elevation={6}>
+      <ButtonBase className={classes.cardAction} onClick={openPost}>
+      <CardMedia className={classes.media} image={post.selectedFile} title={post.title}/>
+      <div className={classes.overlay}>
+        <Typography variant='h6'>{post.name}</Typography>
+      </div>
+     
+      <div className={classes.details}>
+        <Typography variant='body2' color='textSecondary'>{post.tags.map((tag) => `#${tag.trim()} `)}</Typography>
+      </div>
+      <Typography className={classes.title} variant='h5' gutterBottom>{post.title}</Typography>
+      <CardContent>
+        <Typography  variant='body2' color='textSecondary' component='p' noWrap={true}>{post.message}</Typography>
+      </CardContent>
+    </ButtonBase>
+    </Card>
+    )
+  }
 
   return (
     <Paper style={{ padding: '20px', borderRadius: '15px' }} elevation={6}>
@@ -50,7 +71,7 @@ const PostDetails = () => {
         <Divider style={{ margin: '20px 0' }} />
         <Typography variant="body1"><strong>Realtime Chat - coming soon!</strong></Typography>
         <Divider style={{ margin: '20px 0' }} />
-        <Typography variant="body1"><strong>Comments - coming soon!</strong></Typography>
+        <CommentSection post={post} />
         <Divider style={{ margin: '20px 0' }} />
       </div>
       
@@ -58,6 +79,7 @@ const PostDetails = () => {
         <img className={classes.media} src={post.selectedFile || 'https://user-images.githubusercontent.com/194400/49531010-48dad180-f8b1-11e8-8d89-1e61320e1d82.png'} alt={post.title} />
       </div>
     </div>
+    <Button variant='contained' color='primary' onClick={() => navigate(-1)} >Back</Button>
     {recommendedPosts.length ? (
       <div className={classes.section}>
         <Typography gutterBottom variant='h5'>You might also like:</Typography>

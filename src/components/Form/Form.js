@@ -1,5 +1,5 @@
 import React, {useState, useEffect } from 'react';
-import { TextField, Button, Typography, Paper } from '@material-ui/core';
+import { TextField, Button, Typography, Paper, Container } from '@material-ui/core';
 import FileBase  from 'react-file-base64';
 import { useDispatch } from 'react-redux';
 import { useSelector } from 'react-redux';
@@ -44,12 +44,15 @@ const Form = ({ currentId, setCurrentId }) => {
 
     if(!user?.result?.name){
       return (
+        <Container component="main" maxWidth="xs">
         <Paper className={classes.paper}>
           <Typography variant="h6" align="center">Please sign in to create a new Post!</Typography>
         </Paper>
+        </Container>
       )
     }
   return (
+    <Container component="main" maxWidth="xs">
     <Paper className={classes.paper} elevation={6}>
       <form autoComplete='off' noValidate className={`${classes.root} ${classes.form}`} onSubmit={handleSubmit}>
         <Typography variant='h6'>{currentId ? 'Editing' : 'Creating' } a memory</Typography>
@@ -63,6 +66,7 @@ const Form = ({ currentId, setCurrentId }) => {
         <Button variant='contained' color='secondary' size='small' onClick={clear} fullWidth>Clear</Button>
       </form>
     </Paper>
+    </Container>
   )
 }
 

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import {Avatar, Button, Paper, Grid, Typography, Container,} from '@material-ui/core';
+import Alert from '@mui/material/Alert';
 import GoogleLogin from 'react-google-login';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
@@ -19,6 +20,8 @@ const Auth = () => {
     const [showPassword, setShowPassword] = useState(false);
     const [isSignup, setIsSignup] = useState(false);
     const [ formData, setFormData ] = useState(initialValues);
+    const [ error, setError ] = useState(false);
+    const [errorMessage, setErrorMessage ] = useState('');
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
@@ -27,10 +30,10 @@ const Auth = () => {
         e.preventDefault();
         
         if(isSignup){
-            dispatch(signup(formData, navigate));
+            dispatch(signup(formData, navigate, setError, setErrorMessage));
         }
         else{
-            dispatch(signin(formData, navigate));
+            dispatch(signin(formData, navigate, setError, setErrorMessage));
         }
     }
 
@@ -113,7 +116,13 @@ const Auth = () => {
                     </Grid>
                 </Grid>
             </form>
+            
         </Paper>
+        {error && 
+            <Alert style={{marginTop: '10px'}} severity="error"  variant="filled" onClose={() => {setError(false); setErrorMessage('')}}>
+                {errorMessage}
+            </Alert>
+        }
     </Container>
   )
 }
